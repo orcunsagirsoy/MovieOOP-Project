@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Movie</title>
+</head>
+
+<body>
+<header>
+    <nav class = "row">
+        <button id = "home">HOME</button>
+        <div class="dropdown">
+            <button class="dropbtn" id = "moviesBtn">Movies</button>
+            <div class="dropdown-content" id = "genres">
+           
+            </div>
+        </div>
+        <button id = "navActors">Actors</button>
+        <button id = "about">About </button>
+        <form action="/action_page.php">
+            <input type="text" placeholder="Search" name="search">
+        </form>
+        <div class="dropdown">
+            <button class="dropbtn">Filter</button>
+            <div class="dropdown-content">
+            <ul>
+                <li> popular </li>
+                <li> relase date</li>
+                <li> top rated </li>
+                <li> now playing </li>
+                <li> up coming</li>
+            </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+    <div id="container" class="container">
+    </div>
+    <script src="./oop-script.js"></script>
+    <!-- <script type="text/javascript" src="script.js"></script> -->
+
+</body>
+<footer class = "page-footer">
+    <div class= "row"> &copy; Copy Right Knar Gocer    <a href="https://github.com/knargocer" ><img src="./images/github.png" class="footerImg" /></a>  & Orçun Sağırsoy    
+        <a href = "https://github.com/orcunsagirsoy"><img src="./images/github.png"  class="footerImg" /></a>
+    </div>
+    
+    
+
+</footer>
+
+</html>
