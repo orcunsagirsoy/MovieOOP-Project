@@ -8,26 +8,25 @@ Solutions:
  
  - Actor list page
  
-	create a function that gets a parameter called filter that renders the corsponding movies actor's credits by taking the ids.
-	by making the filered movies ids as an array and loading their credits form the api.
 	
 - Search box where you can type the movie or actor name and display the related results.
 
-	useing filter go over the rendered data and find the realted data and display them
+	using filter go over the rendered data and find the realted data and display them
 	
-- A filter dropdown to filter the displayed movies in the home page, based
-on (popular, relase date, top rated, now playing and up coming)
+
+- single movie page
+	we need to get the info from the movies/videos thing by making the youtube link and key merged.
 
 	Fetch the corsponding data and display it  in the container.
 
--single movie and single actor page
+- single actor page
 
 	innerHtml change and displaying the wanted info.
 	
 -styling with bootstrap + CSS
 
+-------------------------------------------------------------------------------------
 THINGS TO INPROVE
-- The way that we are fetching the urls can be made better 
 
 	
 	

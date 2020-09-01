@@ -49,10 +49,17 @@ class APIService {
     }
     
     static async fetchLatest(){
-        const url = APIService._constructUrl(`movie/latest`);
+        try{
+            const url = APIService._constructUrl(`movie/latest`);
         const response = await fetch(url);
         const data = await response.json();
         return  data.results.map(movie => new Movie(movie));
+        }
+        catch(err){
+            HomePage.container.innerHTML = "";
+            return ;
+        }
+        
     }
     
     static async fetchTopRated(){
@@ -62,16 +69,20 @@ class APIService {
         return  data.results.map(movie => new Movie(movie));
     }
     
+    static async fetchNowPlaying(){
+        const url = APIService._constructUrl(`movie/now_playing`);
+        const response = await fetch(url);
+        const data = await response.json();
+        return  data.results.map(movie => new Movie(movie));
+    }
+
     static async fetchUpcoming(){
         const url = APIService._constructUrl(`movie/upcoming`);
         const response = await fetch(url);
         const data = await response.json();
         return  data.results.map(movie => new Movie(movie));
     }
-    
-
 }
-
 class Actors {
     static async run(movie) {
         const movieData = await APIService.fetchActors(movie.id)
@@ -148,7 +159,31 @@ class FilteredPage{
         HomePage.container.innerHTML = "";
         HomePage.renderMovies(movies);
     }
-    static async
+
+    static async getLatest(){
+        const movies = await APIService.fetchLatest();
+       // console.log("knar")
+        HomePage.container.innerHTML = "";
+        HomePage.renderMovies(movies);
+    }
+
+    static async getTopRated(){
+        const movies = await APIService.fetchTopRated();
+        HomePage.container.innerHTML = "";
+        HomePage.renderMovies(movies);
+    }
+    static async getNowPlaying() {
+        const movies = await APIService.fetchNowPlaying();
+        HomePage.container.innerHTML = "";
+        HomePage.renderMovies(movies);
+    }
+
+    static async getUpcoming() {
+        const movies = await APIService.fetchUpcoming();
+        HomePage.container.innerHTML = "";
+        HomePage.renderMovies(movies);
+    }
+    
 }
 
 
@@ -215,7 +250,7 @@ class Movie {
 //     container.innerHTML  = 
 // })
 
-
+//Event Listeners Start
 
 document.querySelector("#about").addEventListener("click",(e)=>{
     const container = document.getElementById('container');
@@ -235,9 +270,25 @@ document.querySelector("#home").addEventListener("click",function load(){
     App.run();
     ;})
     
-    document.querySelector("#popular").addEventListener("click", (e)=>{
-        FilteredPage.getPopular();
-    })
+document.querySelector("#popular").addEventListener("click", (e)=>{
+    FilteredPage.getPopular();
+})
+
+document.querySelector("#latest").addEventListener("click", (e)=>{
+    FilteredPage.getLatest();
+})
+
+document.querySelector("#topRated").addEventListener("click", (e)=>{
+    FilteredPage.getTopRated();
+})
+
+document.querySelector("#upComing").addEventListener("click", (e)=>{
+    FilteredPage.getUpcoming();
+})
+
+document.querySelector("#nowPlaying").addEventListener("click", (e)=>{
+    FilteredPage.getNowPlaying();
+})
 
 document.querySelector("#moviesBtn").addEventListener("mouseover",function(){
     NavBar.getNav();
