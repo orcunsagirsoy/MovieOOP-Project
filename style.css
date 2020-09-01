@@ -10,7 +10,7 @@
     margin: 24px 16px 0 0;
 }
 
-nav{
+.navbar navbar-expand-lg bg-dark navbar-dark{
     display: flexbox;
     justify-content: center;
 }
