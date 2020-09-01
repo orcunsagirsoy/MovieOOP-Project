@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <nav class = "row">
+    <div class = "navbar navbar-expand bg-dark navbar-dark">
         <button id = "home">HOME</button>
         <div class="dropdown">
             <button class="dropbtn" id = "moviesBtn">Movies</button>
@@ -20,24 +20,22 @@
            
             </div>
         </div>
-        <button id = "navActors">Actors</button>
+        <button  id = "navActors">Actors</button>
         <button id = "about">About </button>
         <form action="/action_page.php">
             <input type="text" placeholder="Search" name="search">
         </form>
         <div class="dropdown">
-            <button class="dropbtn">Filter</button>
-            <div class="dropdown-content">
-            <ul>
-                <li> popular </li>
-                <li> relase date</li>
-                <li> top rated </li>
-                <li> now playing </li>
-                <li> up coming</li>
-            </ul>
+            <button class="dropbtn" id = "filterBtn">Filter</button>
+            <div class="dropdown-content" id = "filter">
+                <li class="dropdown-item" id = "popular"> popular </li>
+                <li class="dropdown-item" id = "latest"> latest </li>
+                <li class="dropdown-item" id = "topRated"> top rated </li>
+                <li class="dropdown-item" id = "nowPlaying"> now playing </li>
+                <li class="dropdown-item" id = "upComing"> up coming</li>
             </div>
         </div>
-    </nav>
+    </div>
 </header>
 
     <div id="container" class="container">
