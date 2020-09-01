@@ -17,11 +17,6 @@ class APIService {
         return data.results.map(movie => new Movie(movie))
     }
 
-
-    static async fetchActors() {
-
-    }
-
     static async fetchMovie(movieId) {
         const url = APIService._constructUrl(`movie/${movieId}`)
         const response = await fetch(url)
@@ -38,6 +33,23 @@ class APIService {
         const data = await response.json();
         return data.genres.map(g => new Genre(g)); 
     }
+    static async fetchActors(movieId) {
+        const url = `https://api.themoviedb.org/3/${movieId}/718444/credits?api_key=542003918769df50083a13c415bbc602`
+        const response = await fetch(url);
+        const data = await response.json();
+        return new Actors(data.cast.name)
+    }
+}
+
+class Actors {
+    static async run(movie) {
+        const movieData = await APIService.fetchActors(movie.id)
+        MoviePage.renderMovieSection(movieData);
+        APIService.fetchActors(movieData)
+
+        document.getElementById('container').setAttribute("class","containerColumn");
+
+    }
 }
 
 class Genre{
@@ -51,7 +63,17 @@ class Genre{
         return data.map(el=> el.name);
     }
 }
-
+class ActorsPage {
+    static container = document.getElementById('container');
+    static renderActors(credits) {
+        const actorsArray = credits.cast.filter(cast => cast.gender === 2)
+        actorsArray.forEach(cast => {
+            const acorDiv = document.createElement("div");
+            const actorImage = document.createElement("img");
+            
+        })
+    }
+}
 
 class HomePage {
     static container = document.getElementById('container');
@@ -103,6 +125,7 @@ class MoviePage {
     }
 }
 
+
 class MovieSection {
     static renderMovie(movie) {
         MoviePage.container.innerHTML = `
@@ -141,7 +164,11 @@ class Movie {
     }
 }
 
-
+document.querySelector("#navActors").addEventListener("click", (e) => {
+    const container = document.getElementById('container');
+    container.setAttribute("class","containerColumn");
+    container.innerHTML  = 
+})
 
 
 document.querySelector("#about").addEventListener("click",(e)=>{
