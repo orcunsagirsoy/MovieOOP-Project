@@ -4,10 +4,7 @@ Solutions:
   example: Action, Sci-Fi, Comedy ...etc, When you click one of them it should
   load the movies for that genre.
   
-  Solve it with adding event listener and fetching the needing data.
- 
- - Actor list page
- 
+  Solve it with adding event listener and fetching the needing data from the database.
 	
 - Search box where you can type the movie or actor name and display the related results.
 
@@ -23,6 +20,7 @@ Solutions:
 
 	innerHtml change and displaying the wanted info.
 	
+
 -styling with bootstrap + CSS
 
 -------------------------------------------------------------------------------------

@@ -35,12 +35,13 @@ class APIService {
         const data = await response.json();
         return data.genres.map(g => new Genre(g)); 
     }
-    static async fetchActors(movieId) {
-        const url = `https://api.themoviedb.org/3/${movieId}/credits?api_key=542003918769df50083a13c415bbc602`
+    static async fetchActors() {
+        const url = APIService._constructUrl(`person/popular`);
         const response = await fetch(url);
         const data = await response.json();
-        return new Actors(data.cast.name)
+        return data.results.map(actor => new Actor(actor))
     }
+
     static async fetchPopular(){
         const url = APIService._constructUrl(`movie/popular`);
         const response = await fetch(url);
@@ -59,23 +60,19 @@ class APIService {
             HomePage.container.innerHTML = "";
             return ;
         }
-        
     }
-    
     static async fetchTopRated(){
         const url = APIService._constructUrl(`movie/top_rated`);
         const response = await fetch(url);
         const data = await response.json();
         return  data.results.map(movie => new Movie(movie));
     }
-    
     static async fetchNowPlaying(){
         const url = APIService._constructUrl(`movie/now_playing`);
         const response = await fetch(url);
         const data = await response.json();
         return  data.results.map(movie => new Movie(movie));
     }
-
     static async fetchUpcoming(){
         const url = APIService._constructUrl(`movie/upcoming`);
         const response = await fetch(url);
@@ -83,17 +80,54 @@ class APIService {
         return  data.results.map(movie => new Movie(movie));
     }
 }
-class Actors {
-    static async run(movie) {
-        const movieData = await APIService.fetchActors(movie.id)
-        MoviePage.renderMovieSection(movieData);
-        APIService.fetchActors(movieData)
 
-        document.getElementById('container').setAttribute("class","containerColumn");
+class NavBar{
+    static async getNav(){
+        this.getGenre();
+    }
+    static async getFilter(){
 
     }
+    static async getGenre(){
+        const genres = await Genre.getGenre();
+        document.getElementById("genres").innerHTML="";
+        genres.forEach(genre=>{
+            document.getElementById("genres").innerHTML += `<li class="dropdown-item">${genre}</li>`;
+        })
+    }
 }
-
+class FilteredPage{
+    static async getPopular(){
+        const movies = await APIService.fetchPopular();
+        HomePage.container.innerHTML = "";
+        container.setAttribute("class","container");
+        HomePage.renderMovies(movies);
+    }
+    static async getLatest(){
+        const movies = await APIService.fetchLatest();
+        HomePage.container.innerHTML = "";
+        container.setAttribute("class","container");
+        HomePage.renderMovies(movies);
+    }
+    static async getTopRated(){
+        const movies = await APIService.fetchTopRated();
+        HomePage.container.innerHTML = "";
+        container.setAttribute("class","container");
+        HomePage.renderMovies(movies);
+    }
+    static async getNowPlaying() {
+        const movies = await APIService.fetchNowPlaying();
+        HomePage.container.innerHTML = "";
+        container.setAttribute("class","container");
+        HomePage.renderMovies(movies);
+    }
+    static async getUpcoming() {
+        const movies = await APIService.fetchUpcoming();
+        HomePage.container.innerHTML = "";
+        container.setAttribute("class","container");
+        HomePage.renderMovies(movies);
+    }
+}
 class Genre{
     constructor(genre){
         this.name = genre.name;
@@ -105,18 +139,82 @@ class Genre{
         return data.map(el=> el.name);
     }
 }
-class ActorsPage {
+
+class Actors {
+    static async run(actor) {
+        ActorPage.renderActorSection(actor);
+        document.getElementById('container').setAttribute("class","containerColumn");
+    }
+
+}
+class ActorPage {
     static container = document.getElementById('container');
-    static renderActors(credits) {
-        const actorsArray = credits.cast.filter(cast => cast.gender === 2)
-        actorsArray.forEach(cast => {
-            const acorDiv = document.createElement("div");
-            const actorImage = document.createElement("img");
-            
-        })
+    static renderActorSection(actor) {
+        ActorSection.renderActor(actor);
     }
 }
 
+class ActorSection {
+    static renderActor(actor) {
+
+        ActorPage.container.innerHTML = `
+      <div class="col">
+        <div class="col-md-4">
+           <img id="actor-profile" src=${actor.profileUrl}> 
+        </div>
+        <div class="col-md-8">
+          <h2 id="actor-name">${actor.name}</h2>
+          <p id="popularity">${actor.popularity}</p>
+          <p id="actor-gender">${actor.gender}</p>
+        </div>
+      </div>
+    `;
+    }
+}
+
+class Actor {
+    static PROFILE_PATH_URL = "http://image.tmdb.org/t/p/w780";
+    constructor(json){
+        this.name = json.name;
+        this.gender = json.gender;
+        this.id = json.id;
+        this.popularity = json.popularity;
+        this.profilePath = json.profile_path;
+        // console.log(this.profilePath)
+    }
+
+    get profileUrl() {
+        return this.profilePath ? Actor.PROFILE_PATH_URL + this.profilePath : "";
+    }
+}
+
+class ActorsPage {
+    static container = document.getElementById('container');
+    static renderActors(actors) {
+        actors.forEach(actor => {
+            const actorDiv = document.createElement("div");
+            const actorImage = document.createElement("img");
+            actorImage.setAttribute("class","homeImg")
+            actorImage.src = `${actor.profileUrl}`;
+            const actorName = document.createElement("h3");
+            actorName.textContent = `${actor.name}`;
+            actorImage.addEventListener("click", function() {
+                Actors.run(actor);
+            });
+
+            actorDiv.appendChild(actorName);
+            actorDiv.appendChild(actorImage);
+            this.container.appendChild(actorDiv);
+        })
+    }
+    static async getActors(){
+        const actors = await APIService.fetchActors();
+        const container = document.getElementById('container');
+        container.setAttribute("class","container");
+        container.innerHTML  = " ";
+        ActorsPage.renderActors(actors);
+    }
+}
 class HomePage {
     static container = document.getElementById('container');
     static renderMovies(movies) {
@@ -137,75 +235,19 @@ class HomePage {
         })
     }
 }
-class NavBar{
-    static async getNav(){
-        this.getGenre();
-    }
-    static async getFilter(){
-
-    }
-    static async getGenre(){
-        const genres = await Genre.getGenre();
-        document.getElementById("genres").innerHTML="";
-        genres.forEach(genre=>{
-            document.getElementById("genres").innerHTML += `<li class="dropdown-item">${genre}</li>`;
-        })
-    }
-}
-
-class FilteredPage{
-    static async getPopular(){
-        const movies = await APIService.fetchPopular();
-        HomePage.container.innerHTML = "";
-        HomePage.renderMovies(movies);
-    }
-
-    static async getLatest(){
-        const movies = await APIService.fetchLatest();
-       // console.log("knar")
-        HomePage.container.innerHTML = "";
-        HomePage.renderMovies(movies);
-    }
-
-    static async getTopRated(){
-        const movies = await APIService.fetchTopRated();
-        HomePage.container.innerHTML = "";
-        HomePage.renderMovies(movies);
-    }
-    static async getNowPlaying() {
-        const movies = await APIService.fetchNowPlaying();
-        HomePage.container.innerHTML = "";
-        HomePage.renderMovies(movies);
-    }
-
-    static async getUpcoming() {
-        const movies = await APIService.fetchUpcoming();
-        HomePage.container.innerHTML = "";
-        HomePage.renderMovies(movies);
-    }
-    
-}
-
-
 class Movies {
     static async run(movie) {
         const movieData = await APIService.fetchMovie(movie.id)
         MoviePage.renderMovieSection(movieData);
-        //APIService.fetchActors(movieData)
-
         document.getElementById('container').setAttribute("class","containerColumn");
-
     }
 }
-
 class MoviePage {
     static container = document.getElementById('container');
     static renderMovieSection(movie) {
         MovieSection.renderMovie(movie);
     }
 }
-
-
 class MovieSection {
     static renderMovie(movie) {
         MoviePage.container.innerHTML = `
@@ -226,8 +268,6 @@ class MovieSection {
     `;
     }
 }
-
-
 class Movie {
     static BACKDROP_BASE_URL = 'http://image.tmdb.org/t/p/w780';
     constructor(json) {
@@ -237,6 +277,7 @@ class Movie {
         this.runtime = json.runtime + " minutes";
         this.overview = json.overview;
         this.backdropPath = json.backdrop_path;
+        
     }
 
     get backdropUrl() {
@@ -244,13 +285,14 @@ class Movie {
     }
 }
 
-// document.querySelector("#navActors").addEventListener("click", (e) => {
-//     const container = document.getElementById('container');
-//     container.setAttribute("class","containerColumn");
-//     container.innerHTML  = 
-// })
-
 //Event Listeners Start
+
+
+document.querySelector("#navActors").addEventListener("click", (e) => {
+    ActorsPage.getActors();
+})
+
+
 
 document.querySelector("#about").addEventListener("click",(e)=>{
     const container = document.getElementById('container');
@@ -261,8 +303,6 @@ document.querySelector("#about").addEventListener("click",(e)=>{
     'Halit and Luis). After living on a mauntain with 500 monks for 3 years they came up with this idea. The building process took 6 years and'+ 
     'finally now they are presenting you MOVIE-BUSTERS.<br> ENJOY :) </p>'
 })
-
-
 document.querySelector("#home").addEventListener("click",function load(){
     const container = document.getElementById('container');
     container.setAttribute("class","container");
